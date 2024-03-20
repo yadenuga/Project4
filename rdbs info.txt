@@ -1,0 +1,12 @@
+rdbs info
+---------
+
+DB instance identifier==>Ass4DB
+
+Master username==>yemi
+
+Master password==>Yemi1963$
+
+Initial database name==>Ass4DBase
+
+s3://assignment4-sqlscript/V1__nest.sql

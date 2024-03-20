@@ -1,0 +1,67 @@
+#!/bin/bash
+
+S3_URI=s3://ass4sqlfolder/V1__nest.sql
+RDS_ENDPOINT=ass4db.ch0ki6k60rgo.us-east-1.rds.amazonaws.com
+RDS_DB_NAME=Ass4DBase
+RDS_DB_USERNAME=yemi
+RDS_DB_PASSWORD=Yemi1963$
+
+# Update all packages
+sudo yum update -y
+
+# Download and extract Flyway
+sudo wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/9.20.0/flyway-commandline-9.20.0-linux-x64.tar.gz | tar -xvz
+
+# Create a symbolic link to make Flyway accessible globally
+sudo ln -s $(pwd)/flyway-9.20.0/flyway /usr/local/bin
+
+# Create the SQL directory for migrations
+sudo mkdir sql
+
+aws configure set aws_access_key_id AKIA2UC3EODIFW3V35CD
+aws configure set aws_secret_access_key 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
+
+# Download the migration SQL script from AWS S3
+sudo aws s3 cp s3://ass4sqlfolder/Assignment4 /var/www/html 
+
+git clone https://github.com/yadenuga/Assignment4 /var/www/html
+
+# Change directory to /var/www/html
+cd /var/www/html
+
+# Set permissions 777 for the /var/www/html directory 
+sudo chmod -R 777 /var/www/html
+
+# Set permissions 777 for the /var/www/html/storage directory 
+sudo chmod -R 777 /var/www/html/storage
+
+# Edit the '.env' file located in the html directory and add the followed values for your # domain name and database credentials using this command # sudo nano /var/www/html/.env
+ 
+# i.	APP_URL=www.gadscendes.com
+# ii.	DB_HOST=ass4db.ch0ki6k60rgo.us-east-1.rds.amazonaws.com 
+# iii.	DB_DATABASE=Ass4DBase
+# iv.	DB_USERNAME=yemi
+# v.	DB_PASSWORD=Yemi1963$   
+
+# Run Flyway migration
+sudo flyway -url=jdbc:mysql://ass4db.ch0ki6k60rgo.us-east-1.rds.amazonaws.com:3306/Ass4DBase \
+  -user=yemi \
+  -password=Yemi1963$ \
+  -locations=filesystem:sql \
+  migrate
+
+
+rds info
+---------
+
+DB instance identifier==>ass4db
+
+Master username==>yemi
+
+Master password==>Yemi1963$
+
+Initial database name==>Ass4DBase
+
+Endpoint==> ass4db.ch0ki6k60rgo.us-east-1.rds.amazonaws.com
+
+s3://assignment4-sqlscript/V1__nest.sql
